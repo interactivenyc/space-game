@@ -89,7 +89,7 @@ class Game extends Component {
         canvas.width = this.state.screen.width;
         canvas.height = this.state.screen.height;
 
-        let ship = new Ship(this.state.screen.width, this.state.screen.height, this.context);
+        let ship = new Ship();
         ship.loadImage();
 
         // this.inputHandler = new InputHandler(ship);
