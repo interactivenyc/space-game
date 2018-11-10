@@ -1,0 +1,110 @@
+/*
+ * Hi! I'm your stylesheet! I've got some sensible defaults here,
+ * but feel free to change me to your heart's content!
+ */
+
+* {
+    box-sizing: border-box;
+    font-family: arial, sans-serif;
+    text-decoration: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+main {
+    align-items: center;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+}
+
+nav {
+    align-items: center;
+    background-color: #333333;
+    color: white;
+    display: flex;
+    height: 80px;
+    padding: 10px;
+}
+
+.smallCell {
+    width: 1px;
+    white-space: nowrap;
+}
+
+.navLinks {
+    padding-left: 20px;
+}
+
+.navLink {
+    padding: 10px;
+    color: white;
+    text-decoration: none;
+}
+
+.navLinkSm {
+    padding: 10px;
+    color: #c0c0c0;
+    font-size: 8pt;
+    text-decoration: none;
+}
+
+.navLink:hover,
+.navLinkSm:hover {
+    text-decoration: none;
+    color: yellow;
+}
+
+.active {
+    color: yellow;
+}
+
+.actionLink {
+    color: black;
+    font-size: 8pt;
+    margin: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.student,
+.campus {
+    margin: 10px;
+}
+
+.student-img {
+    width: 120px;
+    height: auto;
+    float: left;
+}
+
+.campus-img {
+    width: 240px;
+    height: auto;
+}
+
+.student-info,
+.campus-info {
+    margin-left: 10px;
+}
+
+.add-form {
+    margin-top: 20px;
+    margin-left: 80px;
+    width: 500px;
+}
+
+.form-header {
+    margin-top: 25px;
+    margin-left: 25px;
+}
+
+.flexbox {
+    display: flex;
+}
+
+.flex-shrink {
+    flex-shrink: 1;
+}
