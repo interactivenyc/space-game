@@ -2,13 +2,9 @@ import React, { Component } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Main from './Main';
+import Game from './Game';
 import Nav from './Nav';
-// import Students from './Students';
-// import Campuses from './Campuses';
-// import StudentDetail from './StudentDetail';
-// import CampusDetail from './CampusDetail';
-// import StudentAdd from './StudentAdd';
-// import CampusAdd from './CampusAdd';
+
 import store, { fetchStudents, fetchCampuses } from '../store';
 
 class Root extends Component {
@@ -25,6 +21,7 @@ class Root extends Component {
                 <Route path="/" component={Nav} />
                 <Switch>
                     <Route exact path="/" component={Main} />
+                    <Route exact path="/game" component={Game} />
                 </Switch>
             </div>
         );
@@ -45,4 +42,9 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Root));
+export default withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(Root)
+);

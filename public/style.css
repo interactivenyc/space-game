@@ -29,11 +29,6 @@ nav {
     padding: 10px;
 }
 
-.smallCell {
-    width: 1px;
-    white-space: nowrap;
-}
-
 .navLinks {
     padding-left: 20px;
 }
@@ -67,44 +62,4 @@ nav {
     margin: 2px;
     padding-left: 10px;
     padding-right: 10px;
-}
-
-.student,
-.campus {
-    margin: 10px;
-}
-
-.student-img {
-    width: 120px;
-    height: auto;
-    float: left;
-}
-
-.campus-img {
-    width: 240px;
-    height: auto;
-}
-
-.student-info,
-.campus-info {
-    margin-left: 10px;
-}
-
-.add-form {
-    margin-top: 20px;
-    margin-left: 80px;
-    width: 500px;
-}
-
-.form-header {
-    margin-top: 25px;
-    margin-left: 25px;
-}
-
-.flexbox {
-    display: flex;
-}
-
-.flex-shrink {
-    flex-shrink: 1;
 }
