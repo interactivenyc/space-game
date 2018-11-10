@@ -29,6 +29,10 @@ nav {
     padding: 10px;
 }
 
+#gameScreen {
+    border: 5px solid black;
+}
+
 .navLinks {
     padding-left: 20px;
 }

@@ -11,8 +11,8 @@ class Root extends Component {
     componentDidMount() {
         this.unsubscribe = store.subscribe(() => this.setState(store.getState()));
 
-        this.props.fetchStudents();
-        this.props.fetchCampuses();
+        // this.props.fetchStudents();
+        // this.props.fetchCampuses();
     }
 
     render() {
