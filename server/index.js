@@ -7,7 +7,7 @@ const volleyball = require('volleyball');
 const app = express();
 
 // logging middleware
-app.use(volleyball);
+// app.use(volleyball);
 
 // body parsing middleware
 app.use(express.json());
@@ -24,13 +24,13 @@ app.get('*', (req, res) => {
 
 // error handling middleware
 app.use((err, req, res, next) => {
-    console.log("CATCHING ERRORS IN ROUTER - 500")
+    console.log('CATCHING ERRORS IN ROUTER - 500');
     console.error(err.stack);
     res.status(err.status || 500).send(err.message || 'Internal server error');
 });
 
 app.use((req, res, next) => {
-  console.log("CATCHING ERRORS IN ROUTER - 404")
+    console.log('CATCHING ERRORS IN ROUTER - 404');
     const err = new Error('404 route not found!');
     err.status = 404;
     next(err);

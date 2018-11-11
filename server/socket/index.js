@@ -14,10 +14,18 @@ module.exports = (io) => {
         socket.on('register-ship', () => {
             console.log('[ socket server ] register ship');
             gameId++;
-            ships[socket.id] = { gameId };
-            console.log('[ socket server ] ships\n', ships);
 
-            socket.emit('new-game-id', gameId, socket.id);
+            socket.emit('new-game-id', gameId, ships);
+
+            ships[socket.id] = { gameId };
+            socket.broadcast.emit('new-enemy', ships[socket.id]);
+        });
+
+        socket.on('ship-update', (shipInfo) => {
+            // console.log('[ socket server ] ship-update:', ships[socket.id].gameId);
+
+            ships[socket.id] = { ...ships[socket.id], shipInfo };
+            socket.broadcast.emit('update-ships', ships);
         });
     });
 };

@@ -7,8 +7,12 @@ socket.on('connect', () => {
     socket.emit('register-ship');
 });
 
-socket.on('new-game-id', (gameId) => {
-    console.log('[ socket client ] new-game-id!', gameId);
+socket.on('new-game-id', (gameId, enemies) => {
+    console.log('[ socket client ] new-game-id!', gameId, enemies);
+});
+
+socket.on('new-enemy', (enemy) => {
+    console.log('[ socket client ] new-enemy!', enemy);
 });
 
 export default socket;

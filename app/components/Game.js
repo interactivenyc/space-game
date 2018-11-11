@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-// import SpaceGame from '../src/SpaceGame';
 import Ship from '../src/Ship';
-// import InputHandler from '../src/InputHandler';
 
 import socket from '../socket';
 
@@ -32,13 +30,23 @@ class Game extends Component {
                 down: 0,
                 space: 0
             },
-            ships: []
+            ship: {},
+            enemyInfo: {},
+            enemyShips: {}
         };
 
         this.initGame = this.initGame.bind(this);
         this.gameLoop = this.gameLoop.bind(this);
         this.handleResize = this.handleResize.bind(this);
         this.handleKeys = this.handleKeys.bind(this);
+        this.processEnemies = this.processEnemies.bind(this);
+
+        socket.on('update-ships', (ships) => {
+            // console.log('[ socket client ] update-ships!', ships);
+            this.setState({
+                enemyInfo: ships
+            });
+        });
     }
 
     handleResize(value, e) {
@@ -92,16 +100,44 @@ class Game extends Component {
         let ship = new Ship();
         ship.loadImage();
 
-        // this.inputHandler = new InputHandler(ship);
-
-        const ships = this.state.ships; // getting eslint warning if passing this.state.ships directly into setState
-
         this.setState({
             context,
-            ships: [...ships, ship]
+            ship
         });
 
         this.gameLoop();
+    }
+
+    processEnemies() {
+        // console.log('processEnemies socket.id', socket.id);
+        let keys = Object.keys(this.state.enemyInfo);
+        // console.log('[ Game ] processEnemies keys', keys);
+        // console.log('[ Game ] enemyShips', this.state.enemyShips);
+
+        for (let i = 0; i < keys.length; i++) {
+            const theKey = keys[i];
+            if (theKey === socket.id) {
+                // console.log('[ Game ] processEnemies skip self');
+            } else {
+                let enemyShip = this.state.enemyShips[theKey];
+                // console.log('[ Game ] enemyShip:', enemyShip);
+
+                if (!enemyShip) {
+                    enemyShip = new Ship();
+                    enemyShip.loadImage();
+                    const enemyShips = this.state.enemyShips;
+                    // const enemyShipHolder = {theKey: enemyShip}
+                    this.setState({
+                        enemyShips: { ...enemyShips, [theKey]: enemyShip }
+                    });
+                    
+                    
+                } else {
+                    enemyShip.setEnemyData(this.state.enemyInfo[theKey].shipInfo);
+                    enemyShip.draw(this.state.context);
+                }
+            }
+        }
     }
 
     gameLoop(timestamp) {
@@ -111,15 +147,13 @@ class Game extends Component {
         if (!this.state.context) return;
 
         this.state.context.clearRect(0, 0, this.state.screen.width, this.state.screen.height);
-        this.state.ships[0].update(this.state.keys);
-        for (let ship of this.state.ships) {
-            ship.draw(this.state.context);
-        }
+        this.state.ship.update(this.state.keys);
+        this.state.ship.draw(this.state.context);
+
+        this.processEnemies();
     }
 
     render() {
-        // console.log('[ Game ] render', this.state.animationFrameId, this.state.lastTime);
-
         return (
             <main>
                 <canvas id="gameScreen" />

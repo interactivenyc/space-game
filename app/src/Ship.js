@@ -1,3 +1,5 @@
+import socket from '../socket';
+
 export default class Ship {
     constructor() {
         console.log('[ Ship ] constructor');
@@ -25,7 +27,7 @@ export default class Ship {
     }
 
     onLoad(thisClass) {
-        console.log('[ Ship ]image loaded', thisClass);
+        // console.log('[ Ship ]image loaded', thisClass);
     }
 
     handleKeys(keys) {
@@ -81,6 +83,19 @@ export default class Ship {
     update(keys) {
         this.handleKeys(keys);
         this.moveShip();
+
+        socket.emit('ship-update', {
+            position: this.position,
+            rotation: this.rotation
+        });
+    }
+
+    setEnemyData(data) {
+        // console.log('[ Ship ] setEnemyData', data);
+        
+        this.position.x = data.position.x;
+        this.position.y = data.position.y;
+        this.rotation = data.rotation;
     }
 
     draw(context) {
