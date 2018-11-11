@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import Ship from '../src/Ship';
 // import InputHandler from '../src/InputHandler';
 
+import socket from '../socket';
+
 const KEY = {
     LEFT: 37,
     RIGHT: 39,
@@ -30,9 +32,7 @@ class Game extends Component {
                 down: 0,
                 space: 0
             },
-            ship: null,
-            animationFrameId: 0,
-            lastTime: 0
+            ships: []
         };
 
         this.initGame = this.initGame.bind(this);
@@ -73,9 +73,9 @@ class Game extends Component {
     }
 
     componentWillUnmount() {
-        window.removeEventListener('keyup', this.handleKeys.bind(this, false));
-        window.removeEventListener('keydown', this.handleKeys.bind(this, true));
-        window.removeEventListener('resize', this.handleResize.bind(this, false));
+        window.removeEventListener('keyup', this.handleKeys);
+        window.removeEventListener('keydown', this.handleKeys);
+        window.removeEventListener('resize', this.handleResize);
 
         cancelAnimationFrame(this.state.animationFrameId);
     }
@@ -94,34 +94,31 @@ class Game extends Component {
 
         // this.inputHandler = new InputHandler(ship);
 
+        const ships = this.state.ships; // getting eslint warning if passing this.state.ships directly into setState
+
         this.setState({
             context,
-            ship
+            ships: [...ships, ship]
         });
 
         this.gameLoop();
     }
 
     gameLoop(timestamp) {
-        // console.log('[ Game ] gameLoop', this.state);
-        const deltaTime = timestamp - this.state.lastTime;
+        // console.log('[ Game ] gameLoop', this.state.ships);
+        requestAnimationFrame(this.gameLoop);
 
-        if (this.state.context) {
-            // context doesn't exist on first run
-            this.state.context.clearRect(0, 0, this.state.screen.width, this.state.screen.height);
-            this.state.ship.draw(this.state.context, this.state.keys, deltaTime);
+        if (!this.state.context) return;
+
+        this.state.context.clearRect(0, 0, this.state.screen.width, this.state.screen.height);
+        this.state.ships[0].update(this.state.keys);
+        for (let ship of this.state.ships) {
+            ship.draw(this.state.context);
         }
-
-        const animationFrameId = requestAnimationFrame(this.gameLoop);
-
-        this.setState({
-            animationFrameId,
-            lastTime: timestamp
-        });
     }
 
     render() {
-        // console.log('[ Game ] render');
+        // console.log('[ Game ] render', this.state.animationFrameId, this.state.lastTime);
 
         return (
             <main>
