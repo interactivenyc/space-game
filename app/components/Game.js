@@ -13,8 +13,6 @@ const KEY = {
     SPACE: 32,
     P: 80
 };
-
-//game constructor
 class Game extends Component {
     constructor() {
         super();
@@ -63,6 +61,9 @@ class Game extends Component {
                 ratio: window.devicePixelRatio || 1
             }
         });
+        let canvas = document.getElementById('gameScreen');
+        canvas.width = this.state.screen.width;
+        canvas.height = this.state.screen.height;
     }
 
     handleKeys(value, e) {
