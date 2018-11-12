@@ -8,11 +8,12 @@ module.exports = (io) => {
         socket.on('disconnect', () => {
             console.log(`Connection ${socket.id} has left the building`);
             delete ships[socket.id];
+            socket.broadcast.emit('enemy-left', socket.id);
             console.log('[ socket server ] ships left\n', ships);
         });
 
         socket.on('register-ship', () => {
-            console.log('[ socket server ] register ship');
+            console.log('[ socket server ] register ship', socket.id);
             gameId++;
 
             socket.emit('new-game-id', gameId, ships);
@@ -26,6 +27,10 @@ module.exports = (io) => {
 
             ships[socket.id] = { ...ships[socket.id], shipInfo };
             socket.broadcast.emit('update-ships', ships);
+        });
+
+        socket.on('trace-state', () => {
+            console.log('[ socket server ] trace-state', JSON.stringify(ships));
         });
     });
 };

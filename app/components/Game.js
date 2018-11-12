@@ -10,9 +10,11 @@ const KEY = {
     A: 65,
     D: 68,
     W: 87,
-    SPACE: 32
+    SPACE: 32,
+    P: 80
 };
 
+//game constructor
 class Game extends Component {
     constructor() {
         super();
@@ -40,12 +42,16 @@ class Game extends Component {
         this.handleResize = this.handleResize.bind(this);
         this.handleKeys = this.handleKeys.bind(this);
         this.processEnemies = this.processEnemies.bind(this);
+        this.traceState = this.traceState.bind(this);
 
         socket.on('update-ships', (ships) => {
-            // console.log('[ socket client ] update-ships!', ships);
             this.setState({
                 enemyInfo: ships
             });
+        });
+
+        socket.on('enemy-left', (enemyId) => {
+            console.log('[ socket client ] enemy-left!', enemyId);
         });
     }
 
@@ -60,14 +66,24 @@ class Game extends Component {
     }
 
     handleKeys(value, e) {
+        if (e.keyCode === KEY.P && e.type === 'keydown') {
+            socket.emit('trace-state');
+            this.traceState();
+        }
+
         let keys = this.state.keys;
         if (e.keyCode === KEY.LEFT || e.keyCode === KEY.A) keys.left = value;
         if (e.keyCode === KEY.RIGHT || e.keyCode === KEY.D) keys.right = value;
         if (e.keyCode === KEY.UP || e.keyCode === KEY.W) keys.up = value;
         if (e.keyCode === KEY.SPACE) keys.space = value;
+
         this.setState({
             keys: keys
         });
+    }
+
+    traceState() {
+        console.log('[ Game ] state', this.state);
     }
 
     componentDidMount() {
@@ -108,40 +124,7 @@ class Game extends Component {
         this.gameLoop();
     }
 
-    processEnemies() {
-        // console.log('processEnemies socket.id', socket.id);
-        let keys = Object.keys(this.state.enemyInfo);
-        // console.log('[ Game ] processEnemies keys', keys);
-        // console.log('[ Game ] enemyShips', this.state.enemyShips);
-
-        for (let i = 0; i < keys.length; i++) {
-            const theKey = keys[i];
-            if (theKey === socket.id) {
-                // console.log('[ Game ] processEnemies skip self');
-            } else {
-                let enemyShip = this.state.enemyShips[theKey];
-                // console.log('[ Game ] enemyShip:', enemyShip);
-
-                if (!enemyShip) {
-                    enemyShip = new Ship();
-                    enemyShip.loadImage();
-                    const enemyShips = this.state.enemyShips;
-                    // const enemyShipHolder = {theKey: enemyShip}
-                    this.setState({
-                        enemyShips: { ...enemyShips, [theKey]: enemyShip }
-                    });
-                    
-                    
-                } else {
-                    enemyShip.setEnemyData(this.state.enemyInfo[theKey].shipInfo);
-                    enemyShip.draw(this.state.context);
-                }
-            }
-        }
-    }
-
     gameLoop(timestamp) {
-        // console.log('[ Game ] gameLoop', this.state.ships);
         requestAnimationFrame(this.gameLoop);
 
         if (!this.state.context) return;
@@ -151,6 +134,31 @@ class Game extends Component {
         this.state.ship.draw(this.state.context);
 
         this.processEnemies();
+    }
+
+    processEnemies() {
+        let keys = Object.keys(this.state.enemyInfo);
+
+        for (let i = 0; i < keys.length; i++) {
+            const theKey = keys[i];
+            if (theKey === socket.id) {
+                // console.log('[ Game ] processEnemies skip self');
+            } else {
+                let enemyShip = this.state.enemyShips[theKey];
+
+                if (!enemyShip) {
+                    enemyShip = new Ship();
+                    enemyShip.loadImage();
+                    const enemyShips = this.state.enemyShips;
+                    this.setState({
+                        enemyShips: { ...enemyShips, [theKey]: enemyShip }
+                    });
+                } else {
+                    enemyShip.setEnemyData(this.state.enemyInfo[theKey].shipInfo);
+                    enemyShip.draw(this.state.context);
+                }
+            }
+        }
     }
 
     render() {

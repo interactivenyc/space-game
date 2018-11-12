@@ -10,7 +10,7 @@ export default class Ship {
         };
         this.maxSpeed = 10;
         this.speed = 0.15;
-        this.inertia = 0.99;
+        this.inertia = 0.998;
         this.velocity = {
             x: 0,
             y: 0
@@ -92,7 +92,7 @@ export default class Ship {
 
     setEnemyData(data) {
         // console.log('[ Ship ] setEnemyData', data);
-        
+
         this.position.x = data.position.x;
         this.position.y = data.position.y;
         this.rotation = data.rotation;
