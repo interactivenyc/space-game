@@ -30,7 +30,8 @@ module.exports = (io) => {
         });
 
         socket.on('trace-state', () => {
-            console.log('[ socket server ] trace-state', JSON.stringify(ships));
+            console.log('[ socket server ] trace-state ----------------------');
+            console.log('[ socket server ] trace-state\n\n', JSON.stringify(ships));
         });
     });
 };

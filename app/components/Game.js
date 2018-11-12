@@ -43,6 +43,7 @@ class Game extends Component {
         this.traceState = this.traceState.bind(this);
 
         socket.on('update-ships', (ships) => {
+            delete ships[socket.id];
             this.setState({
                 enemyInfo: ships
             });
@@ -50,6 +51,12 @@ class Game extends Component {
 
         socket.on('enemy-left', (enemyId) => {
             console.log('[ socket client ] enemy-left!', enemyId);
+            delete this.state.enemyInfo[enemyId];
+            delete this.state.enemyShips[enemyId];
+            this.setState({
+                enemyInfo: this.state.enemyInfo,
+                enemyShips: this.state.enemyShips
+            });
         });
     }
 
@@ -84,7 +91,8 @@ class Game extends Component {
     }
 
     traceState() {
-        console.log('[ Game ] state', this.state);
+        console.log('[ Game ] state ---------------------------------');
+        console.log('[ Game ] state\n\n', this.state);
     }
 
     componentDidMount() {
